@@ -29,4 +29,4 @@ npm run android
 
 Рафаел — Frontend-разработчик (React / React Native)
 [rafael.dallakyan2000@gmail.com]
-[github.com/RafaelDallaqyan2000]
+[https://github.com/RafaelDallaqyan2000/Available-shifts]

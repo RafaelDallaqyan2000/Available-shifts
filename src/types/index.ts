@@ -1,2 +1,2 @@
 export type { LocationType } from './locationType';
-export type { ShiftType } from './shiftType';
+export type { ShiftType, WorkType } from './shiftType';

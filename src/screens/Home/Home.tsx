@@ -1,34 +1,61 @@
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, FlatList } from 'react-native';
 import React, { useEffect } from 'react';
-import { observer } from 'mobx-react-lite';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { shiftStore } from '../../stores';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ShiftType } from '../../types';
 import { styles } from './home.styles';
+import { ShiftListItem } from '../../components';
+import { RootStackParamList } from '../../navigation/NavigationScreens';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import type { RootState } from '../../store';
+import { getShifts, initialize } from '../../store/thunks';
+import { selectShift } from '../../store/shiftSlice';
 
-export const Home = observer(() => {
+type HomeScreenNavigationProp = NativeStackNavigationProp<
+  RootStackParamList,
+  'HomeScreen'
+>;
+
+interface Props {
+  navigation: HomeScreenNavigationProp;
+}
+
+export const Home: React.FC<Props> = ({ navigation }) => {
+  const dispatch = useAppDispatch();
+  const shifts = useAppSelector((state: RootState) => state.shift.shifts);
+  const isLoading = useAppSelector((state: RootState) => state.shift.isLoading);
+  const error = useAppSelector((state: RootState) => state.shift.error);
+
   useEffect(() => {
     asyncFetchShifts();
   }, []);
 
   const asyncFetchShifts = async () => {
-    await shiftStore.initialize();
-    await shiftStore.fetchShifts();
+    const result = await dispatch(initialize());
+    if (initialize.fulfilled.match(result) && result.payload.location) {
+      dispatch(getShifts(result.payload.location));
+    }
   };
 
-  if (shiftStore.isLoading) {
+  const handleShiftPress = (shift: ShiftType) => {
+    dispatch(selectShift(shift));
+    navigation.navigate('ShiftDetailScreen');
+  };
+
+  if (isLoading) {
     return (
-      <SafeAreaView style={styles.container}>
-        <ActivityIndicator size="large" color="#007AFF" />
+      <SafeAreaView style={styles.emptyContainer}>
+        <ActivityIndicator size="large" color="#6366F1" />
         <Text style={styles.loadingText}>Получение геолокации...</Text>
       </SafeAreaView>
     );
   }
 
-  if (shiftStore.error) {
+  if (error) {
     return (
-      <SafeAreaView style={styles.container}>
-        <Text style={styles.errorText}>{shiftStore.error}</Text>
-        <Text style={styles.retryText} onPress={() => shiftStore.initialize()}>
+      <SafeAreaView style={styles.emptyContainer}>
+        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.retryText} onPress={asyncFetchShifts}>
           Попробовать снова
         </Text>
       </SafeAreaView>
@@ -37,23 +64,25 @@ export const Home = observer(() => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <Text style={styles.title}>Доступные смены</Text>
-      {shiftStore.location && (
-        <View style={styles.locationInfo}>
-          <Text style={styles.locationText}>
-            Широта: {shiftStore.location.latitude.toFixed(6)}
-          </Text>
-          <Text style={styles.locationText}>
-            Долгота: {shiftStore.location.longitude.toFixed(6)}
-          </Text>
-          <Text style={styles.shiftsCountText}>
-            Найдено смен: {shiftStore.shifts.length}
-          </Text>
-        </View>
-      )}
-      <Text style={styles.infoText}>
-        Список смен загружен по вашей геолокации
-      </Text>
+      <View style={styles.header}>
+        <Text style={styles.title}>Смены рядом</Text>
+        <Text style={styles.subtitle}>Найдено: {shifts.length} смен</Text>
+      </View>
+
+      <FlatList
+        data={shifts}
+        keyExtractor={(item, index) => item.id || `shift-${index}`}
+        renderItem={({ item }: { item: ShiftType }) => (
+          <ShiftListItem shift={item} onPress={() => handleShiftPress(item)} />
+        )}
+        contentContainerStyle={styles.listContent}
+        showsVerticalScrollIndicator={false}
+        ListEmptyComponent={
+          <View style={styles.emptyContainer}>
+            <Text style={styles.emptyText}>Смены не найдены</Text>
+          </View>
+        }
+      />
     </SafeAreaView>
   );
-});
+};

@@ -1,1 +1,1 @@
-export { ShiftCard } from './ShiftCard';
+export { ShiftListItem } from './ShiftListItem';

@@ -1,11 +1,12 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
-import { Home, ShiftScreen } from '../screens';
+import { Home, ShiftDetailScreen } from '../screens';
 
 export type RootStackParamList = {
   HomeScreen: undefined;
   ShiftScreen: undefined;
+  ShiftDetailScreen: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -13,26 +14,34 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 export const NavigationScreens = () => {
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="HomeScreen">
+      <Stack.Navigator
+        initialRouteName="HomeScreen"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Stack.Screen
           options={{ headerShown: false }}
           name="HomeScreen"
           component={Home}
         />
+
         <Stack.Screen
           options={{
             headerShown: true,
-            title: 'Доступные смены',
+            title: 'Детали смены',
             headerStyle: {
-              backgroundColor: '#FFFFFF',
+              backgroundColor: '#F9FAFB',
             },
-            headerTintColor: '#007AFF',
+            headerTintColor: '#6366F1',
             headerTitleStyle: {
-              fontWeight: '600',
+              fontWeight: '700',
+              fontSize: 18,
             },
+            headerShadowVisible: false,
           }}
-          name="ShiftScreen"
-          component={ShiftScreen}
+          name="ShiftDetailScreen"
+          component={ShiftDetailScreen}
         />
       </Stack.Navigator>
     </NavigationContainer>

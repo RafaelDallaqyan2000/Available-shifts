@@ -6,7 +6,7 @@ const API_BASE_URL = 'https://mobile.handswork.pro/api';
 const getShifts = async (location: LocationType): Promise<ShiftType[]> => {
   try {
     const data = await axios(
-      `https://mobile.handswork.pro/api/shifts/map-list-unauthorized?latitude=${location.latitude}&longitude=${location.longitude}`,
+      `${API_BASE_URL}/shifts/map-list-unauthorized?latitude=${location.latitude}&longitude=${location.longitude}`,
     );
 
     if (data.data.status !== 200) {
