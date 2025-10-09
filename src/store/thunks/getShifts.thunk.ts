@@ -7,9 +7,13 @@ export const getShifts = createAsyncThunk(
   async (location: LocationType, { rejectWithValue }) => {
     try {
       const data = await apiService.getShifts(location);
-      return data;
+      return data || [];
     } catch (error) {
-      return rejectWithValue('Ошибка при загрузке смен');
+      return rejectWithValue(
+        error && error instanceof Error
+          ? error.message
+          : 'Ошибка при загрузке смен',
+      );
     }
   },
 );

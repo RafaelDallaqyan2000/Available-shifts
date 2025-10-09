@@ -1,12 +1,13 @@
 import React from 'react';
-import { View, Text, ScrollView, Image, StatusBar } from 'react-native';
+import { Image, ScrollView, StatusBar, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useAppSelector } from '../../store/hooks';
+import { RootSateType, useAppSelector } from '../../store';
 import { styles } from './shiftDetailScreen.styles.ts';
-import type { RootState } from '../../store';
 
 export const ShiftDetailScreen: React.FC = () => {
-  const shift = useAppSelector((state: RootState) => state.shift.selectedShift);
+  const shift = useAppSelector(
+    (state: RootSateType) => state.shift.selectedShift,
+  );
 
   if (!shift) {
     return (

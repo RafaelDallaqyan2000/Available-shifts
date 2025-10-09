@@ -1,7 +1,6 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
-import { ShiftType, LocationType } from '../types';
-import { apiService, locationService } from '../services';
-import { getShifts, initialize } from './thunks';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LocationType, ShiftType } from '../../types';
+import { getShifts, initialize } from '../thunks';
 
 interface ShiftState {
   shifts: ShiftType[];
@@ -75,12 +74,5 @@ const shiftSlice = createSlice({
   },
 });
 
-export const {
-  selectShift,
-  clearSelectedShift,
-  setLocation,
-  clearError,
-  reset,
-} = shiftSlice.actions;
-
-export default shiftSlice.reducer;
+export const shiftActions = shiftSlice.actions;
+export const shiftReducer = shiftSlice.reducer;

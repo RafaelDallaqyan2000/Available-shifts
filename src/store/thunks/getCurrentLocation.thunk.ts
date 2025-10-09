@@ -11,12 +11,7 @@ export const initialize = createAsyncThunk(
         return rejectWithValue('Не удалось получить геолокацию');
       }
 
-      const location = {
-        latitude: 45.039268,
-        longitude: 38.987221,
-      };
-
-      return { location };
+      return { location: userLocation };
     } catch (error) {
       return rejectWithValue(
         error instanceof Error ? error.message : 'Ошибка при загрузке данных',

@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Image } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { ShiftType } from '../../types';
 import { styles } from './shiftListItem.styles.ts';
 

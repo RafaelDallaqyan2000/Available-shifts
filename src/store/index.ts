@@ -1,11 +1,6 @@
-import { configureStore } from '@reduxjs/toolkit';
-import shiftReducer from './shiftSlice';
+export { store } from './store';
+export { useAppDispatch, useAppSelector } from './hooks';
+export { shiftActions, shiftReducer } from './slices';
+export { initialize, getShifts } from './thunks';
 
-export const store = configureStore({
-  reducer: {
-    shift: shiftReducer,
-  },
-});
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type { RootSateType, AppDispatch } from './store';

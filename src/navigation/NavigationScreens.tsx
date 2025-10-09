@@ -1,6 +1,7 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import React from 'react';
+import { StyleSheet } from 'react-native';
 import { Home, ShiftDetailScreen } from '../screens';
 
 export type RootStackParamList = {
@@ -21,29 +22,33 @@ export const NavigationScreens = () => {
         }}
       >
         <Stack.Screen
-          options={{ headerShown: false }}
           name="HomeScreen"
           component={Home}
+          options={{ headerShown: false }}
         />
 
         <Stack.Screen
-          options={{
-            headerShown: true,
-            title: 'Детали смены',
-            headerStyle: {
-              backgroundColor: '#F9FAFB',
-            },
-            headerTintColor: '#6366F1',
-            headerTitleStyle: {
-              fontWeight: '700',
-              fontSize: 18,
-            },
-            headerShadowVisible: false,
-          }}
           name="ShiftDetailScreen"
           component={ShiftDetailScreen}
+          options={{
+            title: 'Детали смены',
+            headerTintColor: '#6366F1',
+            headerStyle: styles.headerStyle,
+            headerTitleStyle: styles.headerTitleStyle,
+            headerShadowVisible: false,
+          }}
         />
       </Stack.Navigator>
     </NavigationContainer>
   );
 };
+
+const styles = StyleSheet.create({
+  headerStyle: {
+    backgroundColor: '#F9FAFB',
+  },
+  headerTitleStyle: {
+    fontWeight: '700',
+    fontSize: 18,
+  },
+});

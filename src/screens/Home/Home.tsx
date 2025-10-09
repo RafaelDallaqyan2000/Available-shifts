@@ -1,30 +1,27 @@
-import { View, Text, ActivityIndicator, FlatList } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import React, { useEffect } from 'react';
+import { ActivityIndicator, FlatList, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ShiftListItem } from '../../components';
+import {
+  getShifts,
+  initialize,
+  RootSateType,
+  shiftActions,
+  useAppDispatch,
+  useAppSelector,
+} from '../../store';
 import { ShiftType } from '../../types';
 import { styles } from './home.styles';
-import { ShiftListItem } from '../../components';
-import { RootStackParamList } from '../../navigation/NavigationScreens';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import type { RootState } from '../../store';
-import { getShifts, initialize } from '../../store/thunks';
-import { selectShift } from '../../store/shiftSlice';
 
-type HomeScreenNavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
-  'HomeScreen'
->;
-
-interface Props {
-  navigation: HomeScreenNavigationProp;
-}
-
-export const Home: React.FC<Props> = ({ navigation }) => {
+export const Home: React.FC = () => {
+  const navigation = useNavigation();
   const dispatch = useAppDispatch();
-  const shifts = useAppSelector((state: RootState) => state.shift.shifts);
-  const isLoading = useAppSelector((state: RootState) => state.shift.isLoading);
-  const error = useAppSelector((state: RootState) => state.shift.error);
+  const shifts = useAppSelector((state: RootSateType) => state.shift.shifts);
+  const isLoading = useAppSelector(
+    (state: RootSateType) => state.shift.isLoading,
+  );
+  const error = useAppSelector((state: RootSateType) => state.shift.error);
 
   useEffect(() => {
     asyncFetchShifts();
@@ -38,8 +35,8 @@ export const Home: React.FC<Props> = ({ navigation }) => {
   };
 
   const handleShiftPress = (shift: ShiftType) => {
-    dispatch(selectShift(shift));
-    navigation.navigate('ShiftDetailScreen');
+    dispatch(shiftActions.selectShift(shift));
+    navigation.navigate('ShiftDetailScreen' as never);
   };
 
   if (isLoading) {

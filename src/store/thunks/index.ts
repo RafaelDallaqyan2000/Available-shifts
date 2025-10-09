@@ -1,2 +1,2 @@
-export * from './getCurrentLocation.thunk';
-export * from './getShifts.thunk';
+export { initialize } from './getCurrentLocation.thunk';
+export { getShifts } from './getShifts.thunk';
